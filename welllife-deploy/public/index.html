@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WellLife – Student Wellness Support</title>
+<style>
+  /* Low-data by design: no images, no web fonts, one file. */
+  :root{
+    --ink:#112A46; --muted:#4d6178; --paper:#EEF4F1; --card:#ffffff; --line:#cfdcd6;
+    --sea:#1F7A6D; --sea-d:#165c52; --sun:#FFC94A; --alert:#C8432F;
+    --r:14px;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{--ink:#E8F0F5; --muted:#a3b5c4; --paper:#0F1C2A; --card:#162636; --line:#2a3f52; --sea:#4FC3AE; --sea-d:#7fd6c5; --alert:#ff8a76}
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font:17px/1.55 "Avenir Next","Segoe UI",system-ui,-apple-system,Roboto,sans-serif}
+  h1,h2,h3{font-weight:800;letter-spacing:-.02em;line-height:1.15;margin:0}
+  main{max-width:720px;margin:0 auto;padding:20px 16px 80px}
+  header{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:6px 0 18px}
+  .brand{font-weight:800;font-size:1.25rem;letter-spacing:-.03em}
+  .brand span{background:var(--sun);color:#112A46;padding:0 .3em;border-radius:6px}
+  .lang button{background:none;border:1px solid var(--line);color:var(--ink);padding:4px 10px;border-radius:99px;font:inherit;font-size:.85rem;cursor:pointer}
+  .lang button[aria-pressed=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+  section{margin-top:28px}
+  h2{font-size:1.5rem;margin-bottom:12px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+  .hero{display:flex;gap:20px;align-items:center}
+  .hero h1{font-size:clamp(1.8rem,6vw,2.6rem)}
+  .hero p{margin:.4em 0 0;color:var(--muted)}
+  .ring{flex:none;width:112px;height:112px;position:relative}
+  .ring svg{transform:rotate(-90deg)}
+  .ring circle{fill:none;stroke-width:12}
+  .ring .bg{stroke:var(--line)} .ring .fg{stroke:var(--sun);stroke-linecap:round;transition:stroke-dashoffset .4s}
+  .ring b{position:absolute;inset:0;display:grid;place-items:center;font-size:1.6rem}
+  .moods{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+  .moods button{border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:var(--r);padding:10px 2px;font:inherit;font-size:.8rem;cursor:pointer}
+  .moods button span{display:block;font-size:1.6rem;line-height:1.2}
+  .moods button[aria-pressed=true]{border-color:var(--sea);background:color-mix(in srgb,var(--sea) 14%,var(--card));font-weight:700}
+  .habit{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-top:1px solid var(--line)}
+  .habit:first-of-type{border-top:0}
+  .habit input{width:24px;height:24px;margin-top:2px;accent-color:var(--sea);flex:none}
+  .habit small{display:block;color:var(--muted);font-size:.85rem}
+  textarea{width:100%;font:inherit;color:inherit;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:10px;resize:vertical;min-height:64px}
+  .btn{background:var(--sea);color:#fff;border:0;border-radius:99px;padding:12px 22px;font:inherit;font-weight:700;cursor:pointer}
+  .btn:hover{background:var(--sea-d)}
+  .btn.ghost{background:none;color:var(--sea);border:1.5px solid var(--sea)}
+  :where(button,input,textarea,summary):focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+  .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:14px}
+  .msg{font-weight:600;color:var(--sea-d)} .msg.err{color:var(--alert)}
+  .alert{border-color:var(--alert);background:color-mix(in srgb,var(--alert) 9%,var(--card));margin-top:14px}
+  .week{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;align-items:end;height:120px;margin-top:10px}
+  .week div{display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;font-size:.75rem;color:var(--muted)}
+  .week i{display:block;width:100%;max-width:34px;border-radius:6px 6px 2px 2px;background:var(--sea);min-height:4px}
+  .week i.none{background:var(--line)}
+  details{border-top:1px solid var(--line);padding:12px 0}
+  details:first-of-type{border-top:0}
+  summary{cursor:pointer;font-weight:700;display:flex;justify-content:space-between;gap:8px}
+  summary em{font-style:normal;font-weight:400;color:var(--muted);font-size:.85rem}
+  details p{margin:.7em 0}
+  .done{color:var(--sea-d);font-weight:700}
+  .help{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px 0;border-top:1px solid var(--line)}
+  .help:first-of-type{border-top:0}
+  .help a{font-weight:800;font-size:1.15rem;color:var(--sea-d);text-decoration:none;white-space:nowrap}
+  .help small{color:var(--muted);display:block}
+  footer{margin-top:36px;color:var(--muted);font-size:.85rem}
+  @media (max-width:420px){.hero{flex-direction:column;align-items:flex-start}}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="brand">Well<span>Life</span></div>
+    <div class="lang" role="group" aria-label="Language">
+      <button data-l="en" aria-pressed="true">EN</button>
+      <button data-l="hi" aria-pressed="false">हिं</button>
+      <button data-l="gu" aria-pressed="false">ગુ</button>
+    </div>
+  </header>
+
+  <div class="card hero">
+    <div class="ring" aria-hidden="true">
+      <svg width="112" height="112" viewBox="0 0 112 112"><circle class="bg" cx="56" cy="56" r="48"/><circle class="fg" id="fg" cx="56" cy="56" r="48" stroke-dasharray="301.6" stroke-dashoffset="301.6"/></svg>
+      <b id="ringTxt">0/5</b>
+    </div>
+    <div>
+      <h1 data-t="heroTitle"></h1>
+      <p><span id="streak">0</span> <span data-t="streakLabel"></span></p>
+    </div>
+  </div>
+
+  <section id="today">
+    <h2 data-t="checkinTitle"></h2>
+    <div class="card">
+      <p style="margin-top:0;font-weight:700" data-t="moodQ"></p>
+      <div class="moods" id="moods"></div>
+      <p style="font-weight:700;margin-bottom:0" data-t="habitsQ"></p>
+      <div id="habits"></div>
+      <label for="note" style="font-weight:700;display:block;margin:14px 0 6px" data-t="noteLabel"></label>
+      <textarea id="note" maxlength="280"></textarea>
+      <div class="row">
+        <button class="btn" id="save" data-t="save"></button>
+        <span id="status" class="msg" role="status"></span>
+      </div>
+      <div id="nudge" class="card alert" hidden>
+        <b data-t="nudgeTitle"></b>
+        <p style="margin:.4em 0 0" data-t="nudgeBody"></p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 data-t="weekTitle"></h2>
+    <div class="card"><span style="color:var(--muted);font-size:.9rem" data-t="weekHint"></span><div class="week" id="week"></div></div>
+  </section>
+
+  <section>
+    <h2 data-t="learnTitle"></h2>
+    <div class="card" id="lessons"></div>
+  </section>
+
+  <section id="support">
+    <h2 data-t="supportTitle"></h2>
+    <div class="card"><p style="margin-top:0;color:var(--muted)" data-t="supportIntro"></p><div id="help"></div></div>
+  </section>
+
+  <footer data-t="footer"></footer>
+</main>
+
+<script>
+const T = {
+  en:{heroTitle:"Small habits, every day.",streakLabel:"day streak",checkinTitle:"Today's check-in",moodQ:"How are you feeling?",
+    habitsQ:"Which habits did you do today?",noteLabel:"Anything on your mind? (optional, private)",save:"Save check-in",saved:"Saved. Nice work today.",
+    saveErr:"Could not save. Check your connection and try again.",pickMood:"Pick how you feel first.",
+    nudgeTitle:"Two tough days in a row.",nudgeBody:"You don't have to handle this alone. Talk to someone you trust or use the support numbers below.",
+    weekTitle:"Your week",weekHint:"Taller bar = better mood",learnTitle:"Learn in 2 minutes",markDone:"Mark as done",done:"Done",min:"min",
+    supportTitle:"Need to talk to someone?",supportIntro:"Free and trusted. Reaching out is a strong thing to do.",
+    footer:"WellLife is a wellness companion, not a medical service. In an emergency, call your local emergency number.",
+    moods:["Very low","Low","Okay","Good","Great"],
+    habits:{sleep:"Sleep 7+ hours",move:"Move for 20 minutes",water:"Drink 6-8 glasses of water",breathe:"Take 5 calm breaths",talk:"Talk to someone you trust"}},
+  hi:{heroTitle:"छोटी आदतें, हर दिन।",streakLabel:"दिन लगातार",checkinTitle:"आज का चेक-इन",moodQ:"आप कैसा महसूस कर रहे हैं?",
+    habitsQ:"आज आपने कौन-सी आदतें निभाईं?",noteLabel:"मन में कुछ है? (वैकल्पिक, निजी)",save:"चेक-इन सहेजें",saved:"सहेज लिया। आज अच्छा किया।",
+    saveErr:"सहेज नहीं सका। इंटरनेट जाँचकर फिर कोशिश करें।",pickMood:"पहले अपना मूड चुनें।",
+    nudgeTitle:"लगातार दो कठिन दिन।",nudgeBody:"आपको यह अकेले नहीं झेलना है। किसी भरोसेमंद व्यक्ति से बात करें या नीचे दिए नंबरों पर संपर्क करें।",
+    weekTitle:"आपका सप्ताह",weekHint:"ऊँची पट्टी = बेहतर मूड",learnTitle:"2 मिनट में सीखें",markDone:"पूरा हुआ",done:"पूरा",min:"मिनट",
+    supportTitle:"किसी से बात करनी है?",supportIntro:"मुफ़्त और भरोसेमंद। मदद माँगना हिम्मत का काम है।",
+    footer:"WellLife एक वेलनेस साथी है, चिकित्सा सेवा नहीं। आपात स्थिति में अपने स्थानीय आपातकालीन नंबर पर कॉल करें।",
+    moods:["बहुत खराब","खराब","ठीक","अच्छा","बहुत अच्छा"],
+    habits:{sleep:"7+ घंटे सोएँ",move:"20 मिनट शारीरिक गतिविधि",water:"6-8 गिलास पानी पिएँ",breathe:"5 बार शांति से साँस लें",talk:"किसी भरोसेमंद से बात करें"}},
+  gu:{heroTitle:"નાની ટેવો, દરરોજ.",streakLabel:"દિવસ સતત",checkinTitle:"આજનું ચેક-ઇન",moodQ:"તમે કેવું અનુભવો છો?",
+    habitsQ:"આજે તમે કઈ ટેવો પાળી?",noteLabel:"મનમાં કંઈ છે? (વૈકલ્પિક, ખાનગી)",save:"ચેક-ઇન સાચવો",saved:"સાચવ્યું. આજે સરસ કામ કર્યું.",
+    saveErr:"સાચવી શકાયું નહીં. ઇન્ટરનેટ તપાસી ફરી પ્રયત્ન કરો.",pickMood:"પહેલા તમારો મૂડ પસંદ કરો.",
+    nudgeTitle:"સતત બે મુશ્કેલ દિવસ.",nudgeBody:"તમારે આ એકલા સહન કરવાનું નથી. કોઈ વિશ્વાસુ સાથે વાત કરો અથવા નીચેના નંબરો પર સંપર્ક કરો.",
+    weekTitle:"તમારું અઠવાડિયું",weekHint:"ઊંચી પટ્ટી = સારો મૂડ",learnTitle:"2 મિનિટમાં શીખો",markDone:"પૂર્ણ કર્યું",done:"પૂર્ણ",min:"મિનિટ",
+    supportTitle:"કોઈની સાથે વાત કરવી છે?",supportIntro:"મફત અને વિશ્વસનીય. મદદ માગવી એ હિંમતનું કામ છે.",
+    footer:"WellLife એક વેલનેસ સાથી છે, તબીબી સેવા નથી. કટોકટીમાં તમારા સ્થાનિક કટોકટી નંબર પર કૉલ કરો.",
+    moods:["ખૂબ ખરાબ","ખરાબ","ઠીક","સારું","ખૂબ સારું"],
+    habits:{sleep:"7+ કલાક ઊંઘો",move:"20 મિનિટ કસરત કરો",water:"6-8 ગ્લાસ પાણી પીવો",breathe:"5 વાર શાંતિથી શ્વાસ લો",talk:"કોઈ વિશ્વાસુ સાથે વાત કરો"}}
+};
+const EMOJI = ["😞","🙁","😐","🙂","😄"];
+const $ = (s) => document.querySelector(s);
+let lang = localStorage.getItem("wl_lang") || "en";
+let mood = null, habits = [], lessons = [], support = [], summary = null, doneLessons = [];
+
+// Anonymous ID: no name or email needed (privacy-first).
+let uid = localStorage.getItem("wl_uid");
+if (!uid) { uid = (crypto.randomUUID && crypto.randomUUID()) || String(Date.now()) + Math.random().toString(16).slice(2); localStorage.setItem("wl_uid", uid); }
+
+const api = async (url, opts) => {
+  const r = await fetch(url, opts && { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(opts) });
+  const j = await r.json(); if (!r.ok) throw new Error(j.error); return j;
+};
+const ticked = () => [...document.querySelectorAll("#habits input:checked")].map((i) => i.value);
+
+function ring(){
+  const n = ticked().length, total = habits.length || 5;
+  $("#fg").style.strokeDashoffset = 301.6 * (1 - n / total);
+  $("#ringTxt").textContent = n + "/" + total;
+}
+function render(){
+  const t = T[lang];
+  document.documentElement.lang = lang;
+  document.querySelectorAll("[data-t]").forEach((e) => e.textContent = t[e.dataset.t]);
+  document.querySelectorAll(".lang button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.l === lang));
+  $("#moods").innerHTML = t.moods.map((m, i) =>
+    `<button data-m="${i + 1}" aria-pressed="${mood === i + 1}"><span>${EMOJI[i]}</span>${m}</button>`).join("");
+  const keep = new Set(summary?.today?.habits || ticked());
+  $("#habits").innerHTML = habits.map((h) =>
+    `<label class="habit"><input type="checkbox" value="${h.id}" ${keep.has(h.id) ? "checked" : ""}>
+     <span>${t.habits[h.id] || h.label}<small>${h.tip}</small></span></label>`).join("");
+  $("#lessons").innerHTML = lessons.map((l) => `
+    <details><summary>${l.title}<em>${l.minutes} ${t.min}${doneLessons.includes(l.id) ? " · ✓" : ""}</em></summary>
+    <p>${l.body}</p>
+    ${doneLessons.includes(l.id) ? `<span class="done">${t.done} ✓</span>` : `<button class="btn ghost" data-lesson="${l.id}">${t.markDone}</button>`}
+    </details>`).join("");
+  $("#help").innerHTML = support.map((s) => `<div class="help"><div><b>${s.name}</b><small>${s.note}</small></div>
+    ${s.contact ? `<a href="tel:${s.contact}">${s.contact}</a>` : ""}</div>`).join("");
+  if (summary) {
+    $("#streak").textContent = summary.streak;
+    $("#week").innerHTML = summary.week.map((d) => {
+      const day = new Date(d.date + "T00:00:00").toLocaleDateString(lang === "en" ? "en-IN" : lang + "-IN", { weekday: "narrow" });
+      return `<div><i class="${d.mood ? "" : "none"}" style="height:${d.mood ? d.mood * 20 : 4}%" title="${d.date}"></i>${day}</div>`;
+    }).join("");
+  }
+  ring();
+}
+
+document.addEventListener("click", async (e) => {
+  const lb = e.target.closest(".lang button");
+  if (lb) { lang = lb.dataset.l; localStorage.setItem("wl_lang", lang); render(); return; }
+  const mb = e.target.closest("[data-m]");
+  if (mb) { mood = +mb.dataset.m; document.querySelectorAll("#moods button").forEach((b) => b.setAttribute("aria-pressed", b === mb)); return; }
+  const lsn = e.target.closest("[data-lesson]");
+  if (lsn) {
+    try { await api("/api/lessons/" + lsn.dataset.lesson + "/complete", { userId: uid }); doneLessons.push(lsn.dataset.lesson); render(); } catch {}
+  }
+});
+document.addEventListener("change", (e) => { if (e.target.matches("#habits input")) ring(); });
+
+$("#save").addEventListener("click", async () => {
+  const t = T[lang], st = $("#status");
+  st.className = "msg";
+  if (!mood) { st.className = "msg err"; st.textContent = t.pickMood; return; }
+  try {
+    const r = await api("/api/checkins", { userId: uid, mood, habits: ticked(), note: $("#note").value });
+    st.textContent = t.saved;
+    $("#nudge").hidden = !r.needsSupport;
+    summary = await api("/api/summary?userId=" + uid); render();
+  } catch { st.className = "msg err"; st.textContent = t.saveErr; }
+});
+
+(async function init(){
+  try {
+    [habits, lessons, support, summary] = await Promise.all([api("/api/habits"), api("/api/lessons"), api("/api/support"), api("/api/summary?userId=" + uid)]);
+    doneLessons = summary.lessonsDone;
+    if (summary.today) { mood = summary.today.mood; $("#note").value = summary.today.note || ""; }
+  } catch { $("#status").className = "msg err"; $("#status").textContent = T[lang].saveErr; }
+  render();
+})();
+</script>
+</body>
+</html>
